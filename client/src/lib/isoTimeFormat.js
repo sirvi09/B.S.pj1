@@ -1,11 +1,12 @@
-const isoTimeFormat = (dateTime) => {
-    const date= new Date(dateTime);
-    const localTime = date.toLocaleTimeString('en-US',{
-        hour: '2-digit',
-        minute:'2-digit',
-        hour12: true,
-    });
-    return localTime;
-}
+export default function isoTimeFormat(time) {
+  if (!time) return "N/A";
 
-export default isoTimeFormat
+  const date = new Date(`1970-01-01T${time}:00`);
+
+  if (isNaN(date.getTime())) return time;
+
+  return date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}

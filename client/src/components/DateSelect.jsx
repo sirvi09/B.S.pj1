@@ -1,10 +1,11 @@
+// client/src/components/DateSelect.jsx
 import React, { useState } from 'react';
 import BlurCircle from './BlurCircle';
 import { ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
-const DateSelect = ({ dateTime, id }) => {
+const DateSelect = ({ dateTime, movieId }) => {
     const navigate = useNavigate();
     const [selected, setSelected] = useState(null);
 
@@ -12,13 +13,21 @@ const DateSelect = ({ dateTime, id }) => {
         if (!selected) {
             return toast('Please select a date');
         }
-        navigate(`/movies/${id}/${selected}`);
+        // NAVIGATE TO /movie/:movieId/:date  (singular "movie")
+        navigate(`/movie/${movieId}/${encodeURIComponent(selected)}`);
     };
 
-    // Format date to "DD Mon" (e.g., "26 Oct")
+    if (!dateTime || Object.keys(dateTime).length === 0) {
+        return (
+            <div id='dateSelect' className='text-center text-gray-400 mt-10'>
+                Show timings not available
+            </div>
+        );
+    }
+
     const formatDate = (dateStr) => {
         const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return dateStr; // Fallback if invalid
+        if (isNaN(date.getTime())) return dateStr;
         const day = String(date.getDate()).padStart(2, '0');
         const month = date.toLocaleDateString('en-US', { month: 'short' });
         return `${day} ${month}`;

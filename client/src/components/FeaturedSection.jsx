@@ -2,11 +2,15 @@ import React from "react";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BlurCircle from "./BlurCircle";
-import { dummyShowsData } from "../assets/assets";
 import MovieCard from "./MovieCard";
+import { useAppContext } from '../context/AppContext';
 
 const FeaturedSection = () => {
   const navigate = useNavigate();
+  const { shows } = useAppContext();
+
+  // ← THIS LINE FIXES EVERYTHING
+  const featuredMovies = shows.map(s => s.movie || s.movieId).filter(Boolean);
 
   return (
     <div className="px-6 md:px-16 lg:px-24 xl:px-44 overflow-x-auto">
@@ -21,23 +25,27 @@ const FeaturedSection = () => {
           <ArrowRight className="group-hover:translate-x-0.5 transition w-4 h-4" />
         </button>
       </div>
+
       <div className="flex flex-nowrap gap-8 mt-8 overflow-x-auto">
-        {dummyShowsData.slice(0, 4).map((show) => (
-          <MovieCard key={show.id} movie={show} />
+        {featuredMovies.slice(0, 4).map((movie) => (
+          <MovieCard 
+            key={movie._id} 
+            movie={movie} 
+          />
         ))}
       </div>
 
       <div className="flex justify-center mt-20">
-      <button
-        onClick={() => {
-          navigate("/movies");
-          scrollTo(0, 0);
-        }}
-        className="px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-md font-medium cursor-pointer"
-      >
-        Show more
-      </button>
-    </div>
+        <button
+          onClick={() => {
+            navigate("/movies");
+            window.scrollTo(0, 0);
+          }}
+          className="px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-md font-medium cursor-pointer"
+        >
+          Show more
+        </button>
+      </div>
     </div>
   );
 };
